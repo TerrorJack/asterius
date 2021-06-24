@@ -1,0 +1,6 @@
+build --host_platform=@io_tweag_rules_nixpkgs//nixpkgs/platforms:host
+run --host_platform=@io_tweag_rules_nixpkgs//nixpkgs/platforms:host
+
+build --sandbox_writable_path=/home/stan/.ahc-cabal
+run --sandbox_writable_path=/home/stan/.ahc-cabal
+

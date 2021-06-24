@@ -89,6 +89,8 @@ bootRTSCmm BootArgs {..} = do
       . filter ((== ".cmm") . takeExtension)
       <$> listDirectory rts_path
   withTempDir "ahc-boot" $ \tmpdir -> do
+
+    callProcess "sh" ["-c", "echo bootRTSCmmfunction: $pwd"]
     for_ cmm_files $ \src ->
       callProcess
         ahc
