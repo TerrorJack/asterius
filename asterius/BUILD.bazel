@@ -4,25 +4,9 @@ load(
     "haskell_cabal_binary",
 )
 
-haskell_cabal_library(
-    name = "asterius",
-    srcs = glob(["asterius.cabal", "**"]),
-    version = "0.0.1",
-    cabalopts = ["--ghc-option=-j4"],
-    deps = [
-        "//ghc-toolkit",
-        # "@make_packages//ghc-asterius",
-        "@make_packages//ghc-asterius",
-        # "@make_packages//template-haskell-asterius",
-        # "@make_packages//ghci-asterius",
-        # "@make_packages//ghc-boot-asterius",
-        "//wasm-toolkit",
-        "@stackage//:binaryen",
-        "@stackage//:inline-js-core",
-        ":asterius-types"
-
-    ],
-    data = [
+filegroup(
+    name = "asterius_datadir",
+    srcs = [
     "cabal/config",
     "libc/fnv.c",
     "libc/fpstring.c",
@@ -70,7 +54,24 @@ haskell_cabal_library(
     "rts/rts.unicode.mjs",
     "boot-init.sh",
     "boot.sh",
-        ],
+    ],
+    visibility = ["//test:__pkg__"],
+)
+
+haskell_cabal_library(
+    name = "asterius",
+    srcs = glob(["asterius.cabal", "**"]),
+    version = "0.0.1",
+    cabalopts = ["--ghc-option=-j4"],
+    deps = [
+        "//ghc-toolkit",
+        "@make_packages//ghc-asterius",
+        "//wasm-toolkit",
+        "@stackage//:binaryen",
+        "@stackage//:inline-js-core",
+        ":asterius-types"
+
+    ],
     visibility = [
         "//test:__pkg__",
     ]

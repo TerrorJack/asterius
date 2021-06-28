@@ -13,7 +13,13 @@ haskell_cabal_library(
         # "//asterius:__pkg__",
         "//visibility:public",
     ],
-    data = [
+    cabalopts = ["--ghc-option=-j4"],
+)
+
+
+filegroup(
+    name = "ghc-toolkit-datafiles",
+    srcs = [
         "boot-libs/asterius-prelude/asterius-prelude.cabal",
         "boot-libs/asterius-prelude/CHANGELOG.md",
         "boot-libs/asterius-prelude/LICENSE",
@@ -1001,7 +1007,6 @@ haskell_cabal_library(
         "ghc-libdir/platformConstants",
         "ghc-libdir/settings",
         "ghc-libdir/template-hsc.h",
-    ],
-    cabalopts = ["--ghc-option=-j4"],
-)
-
+        ],
+    visibility = ["//test:__pkg__"],
+    )

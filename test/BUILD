@@ -13,7 +13,6 @@ load(
 load(
     "@rules_haskell//haskell:toolchain.bzl",
     "haskell_toolchain",
-    "ahc_haskell_toolchain",
 )
 
 load("@rules_pkg//:pkg.bzl", "pkg_tar", "pkg_deb")
@@ -24,23 +23,11 @@ load("@rules_pkg//:pkg.bzl", "pkg_tar", "pkg_deb")
 asterius_boot(
     name = "asterius_boot",
     srcs = [
+        "//asterius:asterius_datadir",
         "launch_ahc_boot_from_utils.sh",
-        # "boot_env.nix",
-        "//nix:bazel-nix-shell.nix",
-        "//ghc-toolkit",
-        "//asterius:boot-init.sh",
-        "//asterius:boot.sh",
-        # "@nixpkgs//:srcs",
     ],
-    ahc_boot = "//asterius:ahc-boot",
-    nix_shell = "@nix//:bin/nix-shell",
-    nixpkgs_src = "@nixpkgs//:srcs",
-    ghc_toolkit = "//ghc-toolkit",
-    asterius = "//asterius",
-    cabal = "@cabal//:bin",
     tools = [
-        # "@localnixpkgs//:all",
-        # "//ghc-toolkit",
+        "//ghc-toolkit:ghc-toolkit-datafiles",
         "@cabal//:bin",
         "//asterius:ahc",
         "//asterius:ahc-pkg",
@@ -53,11 +40,9 @@ asterius_boot(
         "@ghc//:bin",
         "@autoconf//:bin",
         "@automake//:bin",
-        # "//asterius",
-        # "@binutils//:bin"
+        "@bazel_tools//tools/bash/runfiles",
 
     ],
-    environment = ["@cabal//:bin", "@cabal//:lib",  "//asterius:ahc", "//asterius:asterius-types", "//asterius:ahc-boot"]
 )
 
 # ahc_link(
