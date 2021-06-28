@@ -21,21 +21,9 @@ module Asterius.BuildInfo
 where
 
 import qualified Paths_asterius
-import System.Environment
 import System.Directory
 import System.FilePath
 import System.IO.Unsafe
-
-getDataDirFromEnv = do
-  e <- getEnvironment
-  let l = [(k, v) | (k, v) <- e, k == "ASTERIUS_DATA_DIR"]
-  case l of
-   [] -> do
-     datadir <- Paths_asterius.getDataDir
-     pure datadir
-   [(_, datadir)] ->
-     pure datadir
-  
 
 {-# NOINLINE binDir #-}
 binDir :: FilePath
@@ -43,8 +31,7 @@ binDir = unsafePerformIO Paths_asterius.getBinDir
 
 {-# NOINLINE dataDir #-}
 dataDir :: FilePath
---dataDir = unsafePerformIO Paths_asterius.getDataDir
-dataDir = unsafePerformIO getDataDirFromEnv
+dataDir = unsafePerformIO Paths_asterius.getDataDir
 
 ahc :: FilePath
 ahc = binDir </> "ahc" <.> exeExtension
