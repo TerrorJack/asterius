@@ -4,13 +4,18 @@ workspace(name = "bazel_asterius")
 # Load the repository rule to download an http archive.
 load(
     "@bazel_tools//tools/build_defs/repo:http.bzl",
-    "http_archive"
+    "http_archive",
 )
 
-# Download rules_haskell and make it accessible as "@rules_haskell".
-local_repository(
+load(
+    "@bazel_tools//tools/build_defs/repo:git.bzl",
+    "git_repository",
+)
+
+git_repository(
     name = "rules_haskell",
-    path = "/home/stan/tools/rules_haskell",
+    remote = "https://github.com/tweag/rules_haskell.git",
+    branch = "master",
 )
 
 
