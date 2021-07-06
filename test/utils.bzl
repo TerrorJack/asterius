@@ -39,7 +39,7 @@ def paths_of_tools(ctx):
 
 def _asterius_boot_impl(ctx):
     data_dir = ctx.actions.declare_directory(
-        "datadir",
+        "asterius-{}_data".format(ctx.attr.asterius_version),
     )
 
     tools = depset(transitive = [t.files for t in ctx.attr.tools])
@@ -82,6 +82,7 @@ asterius_boot = rule(
         "_cc_toolchain": attr.label(
             default = Label("@bazel_tools//tools/cpp:current_cc_toolchain"),
         ),
+        "asterius_version": attr.string(),
     },
     toolchains = [
         "@rules_haskell//haskell:toolchain",

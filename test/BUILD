@@ -17,7 +17,7 @@ load(
 
 load("@rules_pkg//:pkg.bzl", "pkg_tar", "pkg_deb")
 
-#load("//bazel_utils/packaging:packaging.bzl", "package_app")
+load("//bazel_utils/packaging:packaging.bzl", "package_app", "bundle_apps")
 
 
 asterius_boot(
@@ -43,6 +43,7 @@ asterius_boot(
         "@bazel_tools//tools/bash/runfiles",
 
     ],
+    asterius_version = "0.0.1",
 )
 
 # ahc_link(
@@ -69,23 +70,46 @@ asterius_boot(
 #     mode = "0755",
 # )
 
-# package_app(
-#     name = "asterius-out",
-#     binary = "//asterius:ahc",
-#     resources = [
-#         # "//bazel_utils/packaging:package-app.sh",
-#         # ":daml-base-anchors.json",
-#         # ":ghc-pkg-dist",
-#         # "//compiler/damlc:ghcversion",
-#         # "//compiler/damlc:hpp",
-#         # "//compiler/damlc/daml-ide-core:dlint.yaml",
-#         # "//compiler/damlc/pkg-db",
-#         # "//compiler/damlc/stable-packages",
-#         # "//compiler/repl-service/server:repl_service_jar",
-#         # "//compiler/scenario-service/server:scenario_service_jar",
-#         # "@static_asset_d3plus//:js/d3.min.js",
-#         # "@static_asset_d3plus//:js/d3plus.min.js",
-#     ],
-#     tags = ["no-cache"],
-#     visibility = ["//visibility:public"],
-# )
+package_app(
+    name = "asterius-out",
+    binary = "//asterius:ahc",
+    resources = [
+        "//bazel_utils/packaging:package-app.sh",
+    ],
+    tags = ["no-cache"],
+    visibility = ["//visibility:public"],
+)
+
+asterius_apps = [
+    "ahc",
+    "ahc-pkg",
+    "ahc-cabal",
+    "ahc-dist",
+    "ahc-ld",
+    "ahc-link",
+]
+
+[
+    package_app(
+        name = "asterius-out-{}".format(app),
+        binary = "//asterius:{}".format(app),
+        resources = [
+            "//bazel_utils/packaging:package-app.sh",
+            "@wasilibc//:wasilibc",
+        ],
+        tags = ["no-cache"],
+        visibility = ["//visibility:public"],
+    )
+    for app in asterius_apps]
+
+bundle_apps(
+    name = "asterius_bundle",
+    packaged_apps = [":asterius-out-{}".format(app) for app in asterius_apps]+[":asterius_boot", ":wrappers"],
+    tags = ["no-cache"],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "wrappers",
+    srcs = glob(["wrappers/*"])
+)

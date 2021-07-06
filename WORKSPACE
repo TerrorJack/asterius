@@ -295,6 +295,19 @@ http_archive(
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
+# Wasi is a runtime dependency for ahc-link
+nixpkgs_package(
+    name = "wasilibc",
+    attribute_path = "wasi-sdk",
+    repository = "@nixpkgs2",
+    build_file_content = """
+filegroup(name = "wasilibc",
+          srcs = glob(["wasi-sdk-12.0/**"]),
+          visibility = ["//visibility:public"],
+
+)
+"""
+)
 
 # dependencies for packaging
 nixpkgs_package(
@@ -317,3 +330,15 @@ nixpkgs_package(
     name = "patchelf",
     repository = "@nixpkgs2",
 )
+
+http_archive(
+    name = "rules_sh",
+    sha256 = "83a065ba6469135a35786eb741e17d50f360ca92ab2897857475ab17c0d29931",
+    strip_prefix = "rules_sh-0.2.0",
+    urls = ["https://github.com/tweag/rules_sh/archive/v0.2.0.tar.gz"],
+)
+load("@rules_sh//sh:repositories.bzl", "rules_sh_dependencies")
+rules_sh_dependencies()
+
+load("@rules_sh//sh:posix.bzl", "sh_posix_configure")
+sh_posix_configure()

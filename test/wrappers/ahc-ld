@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+source setup_env.sh
+$bundle_root/ahc-ld $@
+
